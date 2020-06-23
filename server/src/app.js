@@ -9,10 +9,13 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const mongoose = require("mongoose");
-mongoose.connect('mongodb+srv://shuchita:sillyPassword@cluster0-tfaqk.mongodb.net/test?retryWrites=true&w=majority', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(
+  "mongodb+srv://shuchita:sillyPassword@cluster0-tfaqk.mongodb.net/test?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error"));
 db.once("open", function (callback) {
@@ -21,14 +24,16 @@ db.once("open", function (callback) {
 
 const Post = require("../models/post");
 
+// Fetch all posts
 app.get("/posts", (req, res) => {
-  res.send([
-    {
-      id: 1,
-      title: "Hello World!",
-      description: "Hi there! How are you?"
-    },
-  ]);
+  Post.find({}, "title description", function (error, posts) {
+    if (error) {
+      console.error(error);
+    }
+    res.send({
+      posts: posts,
+    });
+  }).sort({ _id: -1 });
 });
 
 // Add new post
@@ -39,7 +44,7 @@ app.post("/posts", (req, res) => {
   const new_post = new Post({
     // id: id,
     title: title,
-    description: description
+    description: description,
   });
 
   new_post.save(function (error) {
@@ -47,13 +52,13 @@ app.post("/posts", (req, res) => {
       console.log(error);
       res.status(500).send({
         success: false,
-        message: "Error: Post was not saved"
+        message: "Error: Post was not saved",
       });
       return;
     } else {
       res.send({
         success: true,
-        message: "Post saved successfully!"
+        message: "Post saved successfully!",
       });
     }
   });
