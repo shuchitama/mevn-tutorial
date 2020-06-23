@@ -11,6 +11,7 @@ app.use(cors());
 app.get("/posts", (req, res) => {
   res.send([
     {
+      id: 1,
       title: "Hello World!",
       description: "Hi there! How are you?",
     },
