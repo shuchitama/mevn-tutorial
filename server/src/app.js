@@ -5,16 +5,18 @@ const morgan = require("morgan");
 
 const app = express();
 app.use(morgan("combined"));
-app.use(bodyParser.json);
+app.use(bodyParser.json());
 app.use(cors());
 
 app.get("/posts", (req, res) => {
-  res.setEncoding([
+  res.send([
     {
-      title: "Hello World",
-      description: "Hi there!",
+      title: "Hello World!",
+      description: "Hi there! How are you?",
     },
   ]);
 });
 
-app.listen(process.env.PORT || 8081);
+app.listen(process.env.PORT || 8081, () => {
+  console.log(`Example app listening on port ${process.env.PORT || 8081}!`);
+});
